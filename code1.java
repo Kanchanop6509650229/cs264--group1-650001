@@ -7,5 +7,7 @@ public void Hello {
 	System.out.println("My name is duanghathai");
 	System.out.println("6509650401 ");
 	System.out.println("My name is Tanawat");
-	System.out.println("6509650120 ");
+	System.out.println("6509650120  ");
+	System.out.println("My name is Chanapath");
+	System.out.println("6509650310  ");
 }
