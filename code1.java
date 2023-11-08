@@ -10,4 +10,6 @@ public void Hello {
 	System.out.println("6509650120  ");
 	System.out.println("My name is Chanapath");
 	System.out.println("6509650310  ");
+	System.out.println("My name is Thanadech");
+	System.out.println("6509650435  ")
 }
