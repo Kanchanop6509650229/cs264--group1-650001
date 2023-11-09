@@ -16,5 +16,6 @@ public void Hello {
 	System.out.println("6509650724")
 	System.out.println("My name is Nattacha");
 	System.out.println("6509650112")
-
+	System.out.println("My name is Patarawat");
+	System.out.println("6509650153")
 }
