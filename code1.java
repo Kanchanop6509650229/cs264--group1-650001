@@ -18,4 +18,7 @@ public void Hello {
 	System.out.println("6509650112")
 	System.out.println("My name is Patarawat");
 	System.out.println("6509650153")
+	System.out.println("My name is Phurinat");
+	System.out.println("6509650641")
 }
+
