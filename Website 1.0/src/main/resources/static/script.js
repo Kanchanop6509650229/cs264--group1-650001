@@ -61,10 +61,20 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Extract the displayname_th from the result
                       const displayname_th = result.displayname_th;
                       const user_type = result.type;
+                      const user_name = result.username;
+                      const user_faculty = result.faculty;
+                      const user_department = result.department;
                       
-                      window.location.href = `studentWeb/studentHomepage.html?displayname_th=${displayname_th}&type=${user_type}`;
+                      sessionStorage.setItem("authenticated", "true");
+
+                      window.location.href = `studentWeb/studentHomepage.html?displayname_th=${displayname_th}&type=${user_type}&id=${user_name}&faculty=${user_faculty}&department=${user_department}`;
                       } else if (result.type === "employee") {
-                      window.location.href = "employeeHomepage.html"; // Redirect to the employee page
+
+                      sessionStorage.setItem("authenticated", "true");
+                      const displayname_th = result.displayname_th;
+                      const user_type = result.type;
+
+                      window.location.href = `studentWeb/employeeHomepage.html?displayname_th=${displayname_th}&type=${user_type}`;
                       }
                   });
               } else {
