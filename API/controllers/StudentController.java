@@ -32,10 +32,10 @@ public class StudentController {
         }
     }
 
-    @GetMapping("/getStudentData")
-    public ResponseEntity<StudentData> getStudentData(@RequestParam String id) {
+    @GetMapping("/getStudentDataById")
+    public ResponseEntity<StudentData> getStudentData(@RequestParam String studentId) {
         try {
-            StudentData studentData = studentDataRepository.findByStudentId(id);
+            StudentData studentData = studentDataRepository.findByStudentId(studentId);
 
             if (studentData != null) {
                 return new ResponseEntity<>(studentData, HttpStatus.OK);
@@ -47,4 +47,5 @@ public class StudentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
