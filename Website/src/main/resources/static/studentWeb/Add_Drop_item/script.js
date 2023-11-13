@@ -6,8 +6,21 @@ document.addEventListener("DOMContentLoaded", function () {
       window.location.href = "../../index.html";
       return;
     } else {
-    const user_id = urlParams.get("studentId");
-          
+        const urlParams = new URLSearchParams(window.location.search);
+        const user_id = urlParams.get("studentId");
+        const QuitFormLink = document.getElementById('QuitForm');
+  
+        // Add a click event listener to the link
+        QuitFormLink.addEventListener('click', function (event) {
+            // Prevent the default behavior of the link (i.e., prevent it from navigating)
+            event.preventDefault();
+  
+            // Construct the URL for the next page with the studentId parameter
+            const nextPageUrl = `../QuitForm/QuitForm.html?studentId=${user_id}`;
+  
+            // Redirect to the next page
+            window.location.href = nextPageUrl;
+        });
     }
   });
 

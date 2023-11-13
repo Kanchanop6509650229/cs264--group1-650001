@@ -1,0 +1,50 @@
+CREATE TABLE "StudentData" (
+  id BIGINT PRIMARY KEY IDENTITY(1,1),
+  studentId NVARCHAR(10),
+  firstName NVARCHAR(255),
+  lastName NVARCHAR(255),
+  studentYear INT,
+  faculty NVARCHAR(255),
+  department NVARCHAR(255),
+  addressNumber NVARCHAR(20),
+  moo INT,
+  tumbol NVARCHAR(255),
+  amphur NVARCHAR(255),
+  province NVARCHAR(255),
+  postalCode NVARCHAR(255),
+  mobilePhone NVARCHAR(10),
+  phone NVARCHAR(10),
+  advisor NVARCHAR(255)
+);
+
+CREATE TABLE "QuitForm" (
+  id BIGINT PRIMARY KEY IDENTITY(1,1),
+  studentDataId BIGINT, -- Add foreign key
+  semester NVARCHAR(10),
+  year NVARCHAR(5),
+  quitReason NVARCHAR(255),
+  tuFaculty NVARCHAR(255),
+  tuDepartment NVARCHAR(255),
+  university NVARCHAR(255),
+  faculty NVARCHAR(255),
+  department NVARCHAR(255),
+  outstandingDebt NVARCHAR(255),
+  reqGrade BIT,
+  formStatus NVARCHAR(255),
+  FOREIGN KEY (studentDataId) REFERENCES "studentData" (id)
+);
+
+CREATE TABLE "AddDropSubjectList" (
+  id BIGINT PRIMARY KEY IDENTITY(1,1),
+  studentDataId BIGINT, -- Add foreign key
+  selection NVARCHAR(10),
+  subjectCode NVARCHAR(10),
+  subjectName NVARCHAR(255),
+  subjectSection NVARCHAR(10),
+  subjectDate NVARCHAR(255),
+  subjectCredit INT,
+  subjectTeacher NVARCHAR(255),
+  subjectTeacherCheck BIT,
+  formStatus NVARCHAR(255),
+  FOREIGN KEY (studentDataId) REFERENCES "StudentData" (id)
+);
