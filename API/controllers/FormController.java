@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import th.ac.tu.cs.Website.model.AddDrop;
+import th.ac.tu.cs.Website.model.Quit;
 import th.ac.tu.cs.Website.repository.FormRepository;
 
 import java.util.List;
@@ -26,6 +27,19 @@ public class FormController {
                 // Save the AddDrop object
                 formRepository.saveAddDrop(addDrop);
             }
+
+            return ResponseEntity.ok("Form submitted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error submitting form");
+        }
+    }
+
+    @PostMapping("/quitForm")
+    public ResponseEntity<String> submitQuitForm(@RequestBody Quit quit) {
+        try {
+            
+            formRepository.saveQuitForm(quit);
 
             return ResponseEntity.ok("Form submitted successfully");
         } catch (Exception e) {
