@@ -1,34 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Function to populate input fields from localStorage
-    function populateInputFieldsFromStorage() {
-      const firstNameInput = document.getElementById("firstName");
-      const lastNameInput = document.getElementById("lastName");
-      const idInput = document.getElementById("studentId");
-      const facultyInput = document.getElementById("faculty");
-      const departmentInput = document.getElementById("department");
-  
-      // Check if input values are stored in localStorage
-      if (localStorage.getItem("firstName")) {
-        firstNameInput.value = localStorage.getItem("firstName");
-      }
-  
-      if (localStorage.getItem("lastName")) {
-        lastNameInput.value = localStorage.getItem("lastName");
-      }
-  
-      if (localStorage.getItem("studentId")) {
-        idInput.value = localStorage.getItem("studentId");
-      }
-  
-      if (localStorage.getItem("faculty")) {
-        facultyInput.value = localStorage.getItem("faculty");
-      }
-  
-      if (localStorage.getItem("department")) {
-        departmentInput.value = localStorage.getItem("department");
-      }
-    }
-  
     // Check if the user is authenticated
     const isAuthenticated = sessionStorage.getItem("authenticated");
     if (isAuthenticated !== "true") {
@@ -36,8 +6,20 @@ document.addEventListener("DOMContentLoaded", function () {
       window.location.href = "../index.html";
       return;
     } else {
-      // User is authenticated, continue with displaying content
-      const urlParams = new URLSearchParams(window.location.search);
+
+      let urlParamsString = sessionStorage.getItem("urlParams");
+              let urlParams;
+
+              if (urlParamsString) {
+                  // If stored, parse the string to create a URLSearchParams object
+                  urlParams = new URLSearchParams(urlParamsString);
+              } else {
+                  // If not stored, create a new URLSearchParams object
+                  urlParams = new URLSearchParams(window.location.search);
+
+                  // Store the URL parameters in sessionStorage
+                  sessionStorage.setItem("urlParams", urlParams.toString());
+              }
       const displayname_th = urlParams.get("displayname_th");
       const user_type = urlParams.get("type");
       const user_id = urlParams.get("id");
@@ -77,11 +59,77 @@ document.addEventListener("DOMContentLoaded", function () {
       if (user_department) {
         departmentInput.disabled = true;
       }
-  
-      // Populate input fields from localStorage
-      populateInputFieldsFromStorage();
-    }
+      // Get the "ขอเพิ่ม/ถอนรายวิชา (drop w)" link element
+      const addDropLink = document.getElementById('addDropLink');
+
+      // Add a click event listener to the link
+      addDropLink.addEventListener('click', function (event) {
+          // Prevent the default behavior of the link (i.e., prevent it from navigating)
+          event.preventDefault();
+
+          // Construct the URL for the next page with the studentId parameter
+          const nextPageUrl = `Add_Drop_item/add_drop.html?studentId=${user_id}`;
+
+          // Redirect to the next page
+          window.location.href = nextPageUrl;
+      });
+      
+    // Fetch student data by studentId
+    $.ajax({
+      type: "GET",
+      url: `/api/student/getStudentDataById?studentId=${user_id}`,
+      contentType: "application/json",
+      success: function (studentData) {
+          if (studentData) {
+              disableAllInputs();
+              // Populate the input fields with fetched data
+              document.getElementById("studentYear").value = studentData.studentYear;
+              document.getElementById("addressNumber").value = studentData.addressNumber;
+              document.getElementById("moo").value = studentData.moo;
+              document.getElementById("tumbol").value = studentData.tumbol;
+              document.getElementById("amphur").value = studentData.amphur;
+              document.getElementById("province").value = studentData.province;
+              document.getElementById("postalCode").value = studentData.postalCode;
+              document.getElementById("mobilePhone").value = studentData.mobilePhone;
+              document.getElementById("phone").value = studentData.phone;
+              document.getElementById("teacher").value = studentData.advisor;
+              // (Populate other fields accordingly)
+          } else {
+              console.log("No data received for studentId:", user_id);
+              // Log the error to the console for debugging
+          }
+      },
+      error: function (error) {
+          console.log("Error fetching student data:", error);
+
+          // Log the error to the console for debugging
+          Swal.fire({ 
+              icon: "error",
+              title: "Error",
+              text: "Failed to fetch student data. Please check the console for more details.",
+          });
+      },
   });
+  // Add an event listener to check for unsaved changes when the page is about to be unloaded
+      window.addEventListener('beforeunload', function (e) {
+          const enabledInputs = document.querySelectorAll('input:enabled');
+          if (enabledInputs.length > 0) {
+              const confirmationMessage = "ข้อมูลอาจยังไม่ถูกบันทุุึก ยืนยันจะออกจากหน้าเว็ปไซต์หรือไม่";
+              e.returnValue = confirmationMessage; // Standard for most browsers
+              return confirmationMessage; // For some older browsers
+          }
+      });
+      // Add an event listener for the 'unload' event to set sessionStorage if the user chooses to stay on the page
+          window.addEventListener('unload', function () {
+              const enabledInputs = document.querySelectorAll('input:enabled');
+              if (enabledInputs.length > 0) {
+                  // If the user stays on the page, set sessionStorage to indicate the user is still authenticated
+                  sessionStorage.setItem("authenticated", "true");
+              }
+          });
+  }
+  });
+
 
 function logout() {
   // Update the sessionStorage variable to indicate the user is not authenticated
@@ -90,22 +138,6 @@ function logout() {
   // Redirect to the login page or any other desired page
   window.location.href = "../index.html"; // Change the URL as needed
 }
-
-let unsavedChanges = false;
-
-// Function to check if any input fields are enabled
-function checkUnsavedChanges() {
-  const enabledInputs = document.querySelectorAll('input:enabled');
-  unsavedChanges = enabledInputs.length > 0;
-}
-
-// Add an event listener to check for unsaved changes when the page is about to be unloaded
-window.addEventListener('beforeunload', (e) => {
-  if (unsavedChanges) {
-    e.preventDefault();
-    e.returnValue = "หากออกจากหน้าเว็บไซต์ข้อมูลของคุณจะไม่ถูกบันทึก โปรดกดบันทึกก่อนจะออกจากหน้าเว็บไซต์";
-  }
-});
 
 function toggleEditing() {
     // Get references to the input fields by their IDs
@@ -141,12 +173,7 @@ function toggleEditing() {
     toggleDisabled(mobilePhoneInput);
     toggleDisabled(phoneInput);
     toggleDisabled(advisorInput);
-
-    checkUnsavedChanges();
 }
-
-// Add an event listener for form input changes to detect unsaved changes
-document.getElementById("studentDataForm").addEventListener('change', checkUnsavedChanges);
 
 // Save input values to localStorage when the form is submitted
 function submitForm(event) {
@@ -171,14 +198,7 @@ function submitForm(event) {
     jsonData["lastName"] = document.getElementById("lastName").value;
     jsonData["faculty"] = document.getElementById("faculty").value;
     jsonData["department"] = document.getElementById("department").value;
-  
-    // Save the input values to localStorage
-    localStorage.setItem("firstName", jsonData["firstName"]);
-    localStorage.setItem("lastName", jsonData["lastName"]);
-    localStorage.setItem("studentId", jsonData["studentId"]);
-    localStorage.setItem("faculty", jsonData["faculty"]);
-    localStorage.setItem("department", jsonData["department"]);
-  
+
     // Send an AJAX request to your controller with the correct data format
     $.ajax({
       type: "POST",
@@ -186,6 +206,7 @@ function submitForm(event) {
       data: JSON.stringify(jsonData), // Convert to JSON format
       contentType: "application/json", // Set content type to JSON
       success: function (response) {
+        disableAllInputs();
         // Show a success message with SweetAlert2
         Swal.fire({
           title: "Success",
@@ -204,4 +225,11 @@ function submitForm(event) {
         });
       },
     });
+  }
+
+  function disableAllInputs() {
+      const enabledInputs = document.querySelectorAll('input:enabled');
+      enabledInputs.forEach((input) => {
+          input.disabled = true;
+      });
   }
