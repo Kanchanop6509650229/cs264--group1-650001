@@ -2,100 +2,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // Check if the user is authenticated
     const isAuthenticated = sessionStorage.getItem("authenticated");
     if (isAuthenticated !== "true") {
-        // If not authenticated, redirect to the login page
-        window.location.href = "../index.html";
-        return;
+      // If not authenticated, redirect to the login page
+      window.location.href = "../../index.html";
+      return;
     } else {
-        // User is authenticated, continue with displaying content
-        const urlParams = new URLSearchParams(window.location.search);
-        const displayname_th = urlParams.get("displayname_th");
-        const user_type = urlParams.get("type");
-        const user_id = urlParams.get("id");
-        const user_faculty = urlParams.get("faculty");
-        const user_department = urlParams.get("department");
-
-        const firstNameInput = document.getElementById("firstName");
-        const lastNameInput = document.getElementById("lastName");
-        const idInput = document.getElementById("studentId");
-        const facultyInput = document.getElementById("faculty");
-        const departmentInput = document.getElementById("department");
-
-        // Function to fetch data from SQL by user_id
-        const fetchDataFromSQL = () => {
-            // Send an AJAX request to fetch data from SQL based on user_id
-            $.ajax({
-                type: "GET", // You may need to change the HTTP method to GET or POST as per your API design
-                url: `/api/student/getStudentData?id=${user_id}`, // Replace with your actual endpoint
-                success: function (data) {
-                    // Check if data exists
-                    if (data) {
-                        // Data found in SQL, fill the input fields
-                        firstNameInput.value = data.firstName;
-                        lastNameInput.value = data.lastName;
-                        idInput.value = data.studentId;
-                        facultyInput.value = data.faculty;
-                        departmentInput.value = data.department;
-                    } else {
-                        // Data not found in SQL, fetch from API
-                        fetchDataFromAPI();
-                    }
-                },
-                error: function (error) {
-                    // Handle error
-                    console.error("Error fetching data from SQL:", error);
-                    fetchDataFromAPI();
-                },
-            });
-        };
-
-        // Function to fetch data from the API
-        const fetchDataFromAPI = () => {
-            // Send an AJAX request to fetch data from the API
-            $.ajax({
-                type: "GET", // You may need to change the HTTP method to GET or POST as per your API design
-                url: `/api/student/getStudentDataFromAPI?id=${user_id}`, // Replace with your actual endpoint
-                success: function (data) {
-                    if (data) {
-                        // Data found in the API, fill the input fields
-                        firstNameInput.value = data.firstName;
-                        lastNameInput.value = data.lastName;
-                        idInput.value = data.studentId;
-                        facultyInput.value = data.faculty;
-                        departmentInput.value = data.department;
-                    }
-                },
-                error: function (error) {
-                    // Handle error
-                    console.error("Error fetching data from API:", error);
-                },
-            });
-        };
-
-        // Fetch data from SQL or API based on user_id
-        fetchDataFromSQL();
-
-        // Set the values in the <h2> elements
-        document.getElementById("name").textContent = displayname_th;
-        const typeElement = document.getElementById("type");
-        if (user_type === "student") {
-            typeElement.textContent = "นักศึกษา";
-        }
-
-        if (displayname_th) {
-            firstNameInput.disabled = true;
-            lastNameInput.disabled = true;
-        }
-        if (user_id) {
-            idInput.disabled = true;
-        }
-        if (user_faculty) {
-            facultyInput.disabled = true;
-        }
-        if (user_department) {
-            departmentInput.disabled = true;
-        }
+    const user_id = urlParams.get("studentId");
+          
     }
-});
+  });
 
 
 function logout() {
@@ -103,120 +17,115 @@ function logout() {
   sessionStorage.setItem("authenticated", "false");
 
   // Redirect to the login page or any other desired page
-  window.location.href = "../index.html"; // Change the URL as needed
+  window.location.href = "../../index.html"; // Change the URL as needed
 }
+    
+// Function to add a new row
+    function addRow() {
+      const table = document.getElementById("requestTable");
+      const firstRow = table.querySelector("tbody tr:first-child");
+      if (firstRow) {
+          const newRow = firstRow.cloneNode(true);
+          const newInputs = newRow.querySelectorAll("input");
+          newInputs.forEach((input) => (input.value = "")); // Clear input values in the new row
 
-function toggleEditing() {
-    // Get references to the input fields by their IDs
-    const studentYearInput = document.getElementById("studentYear");
-    const addressNumberInput = document.getElementsByName("addressNumber")[0];
-    const mooInput = document.getElementsByName("moo")[0];
-    const tumbolInput = document.getElementsByName("tumbol")[0];
-    const amphurInput = document.getElementsByName("amphur")[0];
-    const provinceInput = document.getElementsByName("province")[0];
-    const postalCodeInput = document.getElementsByName("postalCode")[0];
-    const mobilePhoneInput = document.getElementsByName("mobilePhone")[0];
-    const phoneInput = document.getElementsByName("phone")[0];
-    const advisorInput = document.getElementById("teacher");
+          // Set default value for select elements in the new row
+          const newSelects = newRow.querySelectorAll("select");
+          newSelects.forEach((select) => {
+              select.value = select.querySelector("option").value;
+          });
 
-    // Function to toggle the disabled attribute
-    function toggleDisabled(inputElement) {
-        inputElement.disabled = !inputElement.disabled;
-    }
+          table.querySelector("tbody").appendChild(newRow);
+      }
+  }
 
-    // Toggle the disabled attribute for each input field
-    toggleDisabled(studentYearInput);
-    toggleDisabled(addressNumberInput);
-    toggleDisabled(mooInput);
-    toggleDisabled(tumbolInput);
-    toggleDisabled(amphurInput);
-    toggleDisabled(provinceInput);
-    toggleDisabled(postalCodeInput);
-    toggleDisabled(mobilePhoneInput);
-    toggleDisabled(phoneInput);
-    toggleDisabled(advisorInput);
-}
-
-function submitForm(event) {
-    event.preventDefault(); // Prevent the default form submission
-
-    // Check if all input fields are disabled
-        if (areAllInputFieldsDisabled()) {
-            // Display an alert message
-            Swal.fire({
-                title: "คำเตือน",
-                text: "หากต้องการบันทึกข้อมูล โปรดกดปุ่มแก้ไขและกรอกข้อมูลให้ครบถ้วนก่อน",
-                icon: "warning",
-            });
-            return;
-        }
-
-    // Create a JSON object to hold the form data
-    const jsonData = {};
-
-    // Add values from enabled input fields
-    const formData = $("#studentDataForm").serializeArray();
-    formData.forEach((field) => {
-        if (field.name === "studentYear") {
-            jsonData[field.name] = parseInt(field.value); // Parse as integer
-        } else {
-            jsonData[field.name] = field.value;
-        }
-    });
-
-    // Manually add values from disabled input fields
-    jsonData["studentId"] = document.getElementById("studentId").value;
-    jsonData["firstName"] = document.getElementById("firstName").value;
-    jsonData["lastName"] = document.getElementById("lastName").value;
-    jsonData["faculty"] = document.getElementById("faculty").value;
-    jsonData["department"] = document.getElementById("department").value;
-
-    // Send an AJAX request to your controller with the correct data format
-    $.ajax({
-        type: "POST",
-        url: "/api/student/submitStudentData", // Replace with your actual endpoint
-        data: JSON.stringify(jsonData), // Convert to JSON format
-        contentType: "application/json", // Set content type to JSON
-        success: function (response) {
-            // Show a success message with SweetAlert2
-            Swal.fire({
-                title: "Success",
-                text: response,
-                icon: "success",
-                showConfirmButton: false,
-                timer: 2000, // Auto-close the alert after 2 seconds
-            });
-            disableAllInputFields();
-        },
-        error: function (error) {
-            // Show an error message with SweetAlert2
-            Swal.fire({
-                title: "Error",
-                text: "Failed to save data. Please try again.",
+  // Function to remove the last row (keeping at least one row)
+  function removeRow() {
+      const table = document.getElementById("requestTable");
+      const rows = table.querySelectorAll("tbody tr");
+      if (rows.length > 1) {
+          table.querySelector("tbody").removeChild(rows[rows.length - 1]);
+      } else {
+              Swal.fire({
+                title: "Can not delete row",
+                text: "You must have at least one row.",
                 icon: "error",
-            });
-        },
-    });
-}
+                showConfirmButton: false,
+                timer: 2000, // Auto-close the alert after 1 seconds
+              });
+      }
+  }
 
-// Function to disable all input fields
-function disableAllInputFields() {
-    const inputFields = document.querySelectorAll("input");
-    inputFields.forEach((input) => {
-        input.disabled = true;
-    });
+  function submitForm(event) {
+      event.preventDefault(); // Prevent the default form submission
 
-    // Also disable the "Submit" button
-    document.getElementById("submit-button").disabled = true;
-}
+      const form = document.getElementById("addDropForm");
+      const formData = new FormData(form);
 
-// Function to check if all input fields are disabled
-function areAllInputFieldsDisabled() {
-    const inputFields = document.querySelectorAll("input");
-    for (let input of inputFields) {
-        if (!input.disabled) {
-            return false;
-        }
-    }
-    return true;
-}
+      // Get the studentId from the URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const userId = urlParams.get("studentId");
+
+      // Get all rows in the table
+      const tableRows = document.querySelectorAll("#requestTable tbody tr");
+
+      // Create an array to store data for all rows
+      const rowDataArray = [];
+
+      // Iterate over each row
+      tableRows.forEach((row) => {
+          const rowData = {};
+
+          // Get inputs and selects within the current row
+          const inputsAndSelects = row.querySelectorAll("input, select");
+
+          // Iterate over each input and select to collect data
+          inputsAndSelects.forEach((inputOrSelect) => {
+              const name = inputOrSelect.name;
+              const value = inputOrSelect.value;
+
+              // Skip the submit button
+              if (name !== "submit") {
+                  rowData[name] = value;
+              }
+          });
+
+          // Add userId to rowData
+          rowData["userId"] = userId;
+
+          // Set formStatus to "Nothing"
+          rowData["formStatus"] = "รออาจารย์ที่ปรึกษาอนุมัติ";
+
+          // Add rowData to the array
+          rowDataArray.push(rowData);
+      });
+
+      // Send the array of row data to the server using an AJAX request
+      $.ajax({
+          type: "POST",
+          url: "/api/form/add-dropForm", // Replace with your actual API endpoint
+          contentType: "application/json",
+          data: JSON.stringify(rowDataArray),
+          success: function (response) {
+              // Handle success, e.g., show a success message
+              console.log("Form submitted successfully", response);
+              Swal.fire({
+                  title: "Form submitted successfully",
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 2000,
+              });
+          },
+          error: function (error) {
+              // Handle error, e.g., show an error message
+              console.error("Error submitting form", error);
+              Swal.fire({
+                  title: "Error submitting form",
+                  text: "Please try again later.",
+                  icon: "error",
+                  showConfirmButton: false,
+                  timer: 2000,
+              });
+          },
+      });
+  }

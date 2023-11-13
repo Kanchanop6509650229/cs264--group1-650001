@@ -22,7 +22,7 @@
                 <div class="dropdown-content">
                     <a href="#" class="not-active">ขอลาออก</a>
                     <a href="#" class="not-active">ขอผ่อนผันค่าจดทะเบียนเรียน</a>
-                    <a href="Add_Drop_item/add_drop.html" class="not-active">ขอเพิ่ม/ถอนรายวิชา (drop w)</a>
+                    <a href="Add_Drop_item/add_drop.html" class="not-active" id="addDropLink">ขอเพิ่ม/ถอนรายวิชา (drop w)</a>
                     <a href="#" class="not-active">อื่นๆ</a>
                 </div>
             </div>
@@ -47,18 +47,18 @@
                     <label>คณะ</label><input type="text" required id="faculty" style="flex: 0.7;">
                     <label>สาขา</label><input type="text" required id="department" style="margin-right: 0;">
                 </h4>
-                <h4><label>ที่อยู่ บ้านเลขที่</label><input type="text" name="addressNumber" required style="flex: 0.1; width: 2%;">
-                    <label>หมู่</label><input type="number" name="moo" required style="flex: 0.1; width: 2%;">
-                    <label>ตำบล</label><input type="text" name="tumbol" required style="flex: 0.4;">
-                    <label>อำเภอ</label><input type="text" name="amphur" required style="flex: 0.4; margin-right: 0;">
+                <h4><label>ที่อยู่ บ้านเลขที่</label><input type="text" name="addressNumber" id="addressNumber" required style="flex: 0.1; width: 2%;">
+                    <label>หมู่</label><input type="number" name="moo" id="moo" required style="flex: 0.1; width: 2%;">
+                    <label>ตำบล</label><input type="text" name="tumbol" id="tumbol" required style="flex: 0.4;">
+                    <label>อำเภอ</label><input type="text" name="amphur" id="amphur" required style="flex: 0.4; margin-right: 0;">
                 </h4>
                 <h4>
-                    <label>จังหวัด</label><input type="text" name="province" required style="flex: content;">
-                    <label>รหัสไปรษณีย์</label><input type="tel" name="postalCode" required pattern="[0-9]{5}" style="flex: 0.1;">
-                    <label>โทรศัพท์มือถือ</label><input type="tel" name="mobilePhone" pattern="[0-9]{10}" required style="flex: content; margin-right: 0;">
+                    <label>จังหวัด</label><input type="text" name="province" id="province" required style="flex: content;">
+                    <label>รหัสไปรษณีย์</label><input type="tel" name="postalCode" id="postalCode" required pattern="[0-9]{5}" style="flex: 0.1;">
+                    <label>โทรศัพท์มือถือ</label><input type="tel" name="mobilePhone" id="mobilePhone" pattern="[0-9]{10}" required style="flex: content; margin-right: 0;">
                 </h4>
                 <h4>
-                    <label>โทรศัพท์บ้าน(ถ้ามี)</label><input type="tel" name="phone" pattern="[0-9]{10}">
+                    <label>โทรศัพท์บ้าน(ถ้ามี)</label><input type="tel" name="phone" id="phone" pattern="[0-9]{10}">
                     <label>อาจารย์ที่ปรึกษา</label><input type="text" name="advisor" id="teacher" required style="margin-right: 0;">
                 </h4>
                 <h4 style="margin-top: 50px;">

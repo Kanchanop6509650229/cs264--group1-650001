@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>Add/Drop Form</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -22,7 +22,7 @@
                 <div class="dropdown-content">
                     <a href="#" class="not-active">ขอลาออก</a>
                     <a href="#" class="not-active">ขอผ่อนผันค่าจดทะเบียนเรียน</a>
-                    <a href="#" class="active">ขอเพิ่ม/ถอนรายวิชา (drop w)</a>
+                    <a href="#top" class="active">ขอเพิ่ม/ถอนรายวิชา (drop w)</a>
                     <a href="#" class="not-active">อื่นๆ</a>
                 </div>
             </div>
@@ -31,35 +31,68 @@
         </nav>
     </header>
     <div class="wrapper" style="height: auto;">
-        <div class="info-box" style="background-color: rgba(212, 204, 196, 0.75); border-radius: 34px; padding-top: 15px; text-align: left; margin-bottom: 60px;">
-            <h3>ข้อมูลส่วนตัวของนักศึกษา</h3>
-            <form style="margin: 0;" method="post" onsubmit="submitForm(event)" id="studentDataForm">
-                <h4><label>ชื่อ</label><input type="text" required id="firstName">
-                    <label>นามสกุล</label><input type="text" required id="lastName">
-                    <label>เลขทะเบียน</label><input type="tel" required id="studentId" pattern="[0-9]{10}" style="margin-right: 0;">
+        <div class="info-box" style="background-color: rgba(212, 204, 196, 0.75); border-radius: 34px; padding-top: 15px; text-align: left; margin-bottom: 60px; margin-top: 30px;">
+            <h3>แบบฟอร์มยื่นขอเพิ่ม/ถอนรายวิชา (Drop W)</h3>
+            <form style="margin: 0;" id="addDropForm" onsubmit="submitForm(event)">
+                <table class="table" id="requestTable">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>รหัสวิชา</th>
+                        <th>ชื่อวิชา</th>
+                        <th>Section</th>
+                        <th>วัน/เวลา</th>
+                        <th>หน่วยกิต</th>
+                        <th>ชื่อผู้สอน</th>
+                        <th>ผู้สอนอนุญาติ</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <select name="selection" style="width: 100%;" required>
+                                <option value="" selected disabled hidden>-</option>
+                                <option value="Add">เพิ่ม</option>
+                                <option value="Drop">ถอน</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="subjectCode" maxlength="6" required>
+                        </td>
+                        <td>
+                            <input type="text" name="subjectName" id="firstName" required>
+                        </td>
+                        <td>
+                            <input type="tel" name="subjectSection" pattern="[0-9]{6}" maxlength="6" required>
+                        </td>
+                        <td>
+                            <input type="datetime-local" name="subjectDate" required>
+                        </td>
+                        <td>
+                            <input type="number" name="subjectCredit" maxlength="1" min="0" max="3" required>
+                        </td>
+                        <td>
+                            <input type="text" name="subjectTeacher" required>
+                        </td>
+                        <td>
+                            <select name="subjectTeacherCheck" required>
+                                <option value="" selected disabled hidden>-</option>
+                                <option value="true">อนุญาติ</option>
+                                <option value="false">ไม่อนุญาติ</option>
+                            </select>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <h4 style="margin-top: 25px; font-size: 1.1em;">
+                <!-- Add a "Add Row" button -->
+                <button type="button" id="addButton" onclick="addRow()" style="margin-right: 20px;">เพิ่มแถว</button>
+
+                <!-- Add a "Remove Row" button -->
+                <button type="button" id="removeButton" onclick="removeRow()" style="margin-left: 20px;">ลบแถว</button>
                 </h4>
-                <h4><label>ชั้นปีที่ศึกษา</label><input type="number" required id="studentYear" name="studentYear" min="1" max="8" style="flex: 0.2;">
-                    <label>คณะ</label><input type="text" required id="faculty" style="flex: 0.7;">
-                    <label>สาขา</label><input type="text" required id="department" style="margin-right: 0;">
-                </h4>
-                <h4><label>ที่อยู่ บ้านเลขที่</label><input type="text" name="addressNumber" required style="flex: 0.1; width: 2%;">
-                    <label>หมู่</label><input type="number" name="moo" required style="flex: 0.1; width: 2%;">
-                    <label>ตำบล</label><input type="text" name="tumbol" required style="flex: 0.4;">
-                    <label>อำเภอ</label><input type="text" name="amphur" required style="flex: 0.4; margin-right: 0;">
-                </h4>
-                <h4>
-                    <label>จังหวัด</label><input type="text" name="province" required style="flex: content;">
-                    <label>รหัสไปรษณีย์</label><input type="tel" name="postalCode" required pattern="[0-9]{5}" style="flex: 0.1;">
-                    <label>โทรศัพท์มือถือ</label><input type="tel" name="mobilePhone" pattern="[0-9]{10}" required style="flex: content; margin-right: 0;">
-                </h4>
-                <h4>
-                    <label>โทรศัพท์บ้าน(ถ้ามี)</label><input type="tel" name="phone" pattern="[0-9]{10}">
-                    <label>อาจารย์ที่ปรึกษา</label><input type="text" name="advisor" id="teacher" required style="margin-right: 0;">
-                </h4>
-                <h4 style="margin-top: 50px;">
-                    <button type="button" class="btn" id="edit-btn" style="margin-right: 10px;  background-color: rgb(194, 194, 15); color: black;" onclick="toggleEditing()">แก้ไข</button><button type="submit" class="btn" style="margin-left: 10px;">บันทึก</button>
-                </h4>
-                </form>
+                    <button type="submit" class="btn" style="width: 100%; font-size: 1.1em;">บันทึก</button>
+            </form>
         </div>
     </div>
     <a id="logout-button" onclick="logout()">
