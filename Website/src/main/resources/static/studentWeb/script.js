@@ -6,6 +6,31 @@ document.addEventListener("DOMContentLoaded", function () {
       window.location.href = "../index.html";
       return;
     } else {
+      // Add event listener for screen resize
+  window.addEventListener("resize", function () {
+    checkScreenSize();
+  });
+
+  // Function to check and display SweetAlert for screen size
+  function checkScreenSize() {
+    const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+    // Check if the screen size is less than 1800px
+    if (screenWidth < 1490) {
+      Swal.fire({
+        icon: "warning",
+        title: "เราขอแนะนำให้ใช้เบราว์เซอร์ในขนาดเต็มจอ หรือความกว้างมากกว่า 1490px",
+        showCancelButton: false,
+        confirmButtonText: "OK",
+      }).then(() => {
+        // Check screen size again after the user clicks OK
+        checkScreenSize();
+      });
+    }
+  }
+
+  // Initial check when the page loads
+  checkScreenSize();
 
       let urlParamsString = sessionStorage.getItem("urlParams");
               let urlParams;
@@ -86,6 +111,48 @@ document.addEventListener("DOMContentLoaded", function () {
             // Redirect to the next page
             window.location.href = nextPageUrl;
         });
+
+        const lateFormLink = document.getElementById('lateFormLink');
+
+      // Add a click event listener to the link
+      lateFormLink.addEventListener('click', function (event) {
+          // Prevent the default behavior of the link (i.e., prevent it from navigating)
+          event.preventDefault();
+
+          // Construct the URL for the next page with the studentId parameter
+          const nextPageUrl = `LateForm/lateform.html?studentId=${user_id}`;
+
+          // Redirect to the next page
+          window.location.href = nextPageUrl;
+      });
+
+      const OtherFormLink = document.getElementById('otherFormLink');
+
+        // Add a click event listener to the link
+        OtherFormLink.addEventListener('click', function (event) {
+            // Prevent the default behavior of the link (i.e., prevent it from navigating)
+            event.preventDefault();
+
+            // Construct the URL for the next page with the studentId parameter
+            const nextPageUrl = `OtherForm/otherform.html?studentId=${user_id}`;
+
+            // Redirect to the next page
+            window.location.href = nextPageUrl;
+        });
+
+        const statusLink = document.getElementById('statusLink');
+
+        // Add a click event listener to the link
+        statusLink.addEventListener('click', function (event) {
+        // Prevent the default behavior of the link (i.e., prevent it from navigating)
+            event.preventDefault();
+
+            // Construct the URL for the next page with the studentId parameter
+            const nextPageUrl = `Status/status.html?studentId=${user_id}`;
+
+            // Redirect to the next page
+            window.location.href = nextPageUrl;
+        });
       
     // Fetch student data by studentId
     $.ajax({
@@ -114,13 +181,6 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       error: function (error) {
           console.log("Error fetching student data:", error);
-
-          // Log the error to the console for debugging
-          Swal.fire({ 
-              icon: "error",
-              title: "Error",
-              text: "Failed to fetch student data. Please check the console for more details.",
-          });
       },
   });
   // Add an event listener to check for unsaved changes when the page is about to be unloaded

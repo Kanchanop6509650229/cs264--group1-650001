@@ -7,6 +7,9 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import th.ac.tu.cs.Website.model.StudentData;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import java.util.List;
 
@@ -17,8 +20,15 @@ public class JdbcStudentDataRepository implements StudentDataRepository {
 
     @Override
     public void saveStudent(StudentData studentData) {
-        String sql = "INSERT INTO StudentData (studentId, firstName, lastName, studentYear, faculty, department, addressNumber, moo, tumbol, amphur, province, postalCode, mobilePhone, phone, advisor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, studentData.getStudentId(), studentData.getFirstName(), studentData.getLastName(), studentData.getStudentYear(), studentData.getFaculty(), studentData.getDepartment(), studentData.getAddressNumber(), studentData.getMoo(), studentData.getTumbol(), studentData.getAmphur(), studentData.getProvince(), studentData.getPostalCode(), studentData.getMobilePhone(), studentData.getPhone(), studentData.getAdvisor());
+        // Get the current timestamp
+        Timestamp timestamp = new Timestamp(new Date().getTime());
+
+        // Format the timestamp as "dd/MM/yyyy HH:mm"
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String formattedTimestamp = dateFormat.format(timestamp);
+
+        String sql = "INSERT INTO StudentData (studentId, firstName, lastName, studentYear, faculty, department, addressNumber, moo, tumbol, amphur, province, postalCode, mobilePhone, phone, advisor, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, studentData.getStudentId(), studentData.getFirstName(), studentData.getLastName(), studentData.getStudentYear(), studentData.getFaculty(), studentData.getDepartment(), studentData.getAddressNumber(), studentData.getMoo(), studentData.getTumbol(), studentData.getAmphur(), studentData.getProvince(), studentData.getPostalCode(), studentData.getMobilePhone(), studentData.getPhone(), studentData.getAdvisor(), formattedTimestamp);
     }
 
     @Override
@@ -68,6 +78,7 @@ public class JdbcStudentDataRepository implements StudentDataRepository {
                         student.setMobilePhone(rs.getString("mobilePhone"));
                         student.setPhone(rs.getString("phone"));
                         student.setAdvisor(rs.getString("advisor"));
+                        student.setCreated_at(rs.getString("created_at"));
                         return student;
                     }
             );

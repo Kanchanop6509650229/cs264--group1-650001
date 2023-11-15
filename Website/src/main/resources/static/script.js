@@ -8,6 +8,7 @@ function disableOtherForm(formId) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+
   const form1 = document.getElementById("form1");
   const submitBtn = document.getElementById("submitBtn");
 
@@ -89,4 +90,30 @@ document.addEventListener("DOMContentLoaded", function () {
     }
       
   });
+
+  // Add event listener for screen resize
+  window.addEventListener("resize", function () {
+    checkScreenSize();
+  });
+
+  // Function to check and display SweetAlert for screen size
+  function checkScreenSize() {
+    const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+    // Check if the screen size is less than 1800px
+    if (screenWidth < 1490) {
+      Swal.fire({
+        icon: "warning",
+        title: "เราขอแนะนำให้ใช้เบราว์เซอร์ในขนาดเต็มจอ หรือความกว้างมากกว่า 1490px",
+        showCancelButton: false,
+        confirmButtonText: "OK",
+      }).then(() => {
+        // Check screen size again after the user clicks OK
+        checkScreenSize();
+      });
+    }
+  }
+
+  // Initial check when the page loads
+  checkScreenSize();
 });
