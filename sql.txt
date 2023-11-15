@@ -14,7 +14,8 @@ CREATE TABLE "StudentData" (
   postalCode NVARCHAR(255),
   mobilePhone NVARCHAR(10),
   phone NVARCHAR(10),
-  advisor NVARCHAR(255)
+  advisor NVARCHAR(255),
+  created_at NVARCHAR(255)
 );
 
 CREATE TABLE "QuitForm" (
@@ -31,6 +32,7 @@ CREATE TABLE "QuitForm" (
   outstandingDebt NVARCHAR(255),
   reqGrade BIT,
   formStatus NVARCHAR(255),
+  created_at NVARCHAR(255),
   FOREIGN KEY (studentDataId) REFERENCES "studentData" (id)
 );
 
@@ -46,5 +48,27 @@ CREATE TABLE "AddDropSubjectList" (
   subjectTeacher NVARCHAR(255),
   subjectTeacherCheck BIT,
   formStatus NVARCHAR(255),
+  created_at NVARCHAR(255),
   FOREIGN KEY (studentDataId) REFERENCES "StudentData" (id)
+);
+
+CREATE TABLE "LateForm" (
+  id BIGINT PRIMARY KEY IDENTITY(1,1),
+  studentDataId BIGINT, -- Add foreign key
+  semester NVARCHAR(10),
+  year NVARCHAR(5),
+  payDate NVARCHAR(255),
+  reason NVARCHAR(255),
+   formStatus NVARCHAR(255),
+  created_at NVARCHAR(255),
+  FOREIGN KEY (studentDataId) REFERENCES "studentData" (id)
+);
+
+CREATE TABLE "OtherForm" (
+  id BIGINT PRIMARY KEY IDENTITY(1,1),
+  studentDataId BIGINT, -- Add foreign key
+  info NVARCHAR(255),
+  formStatus NVARCHAR(255),
+  created_at NVARCHAR(255),
+  FOREIGN KEY (studentDataId) REFERENCES "studentData" (id)
 );
