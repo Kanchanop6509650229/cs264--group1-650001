@@ -36,6 +36,15 @@ public class AddDrop {
     private String subjectTeacher;
     private String subjectTeacherCheck;
     private String formStatus;
+    private String created_at;
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
 
     public void setUserId(String userId) {
         this.userId = userId;
