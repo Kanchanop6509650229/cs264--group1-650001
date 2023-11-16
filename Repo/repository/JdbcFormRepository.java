@@ -121,4 +121,171 @@ public class JdbcFormRepository implements FormRepository {
             return null;
         }
     }
+
+    @Override
+    public Late searchLateForm(String formId){
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM LateForm WHERE id = ?",
+                    new Object[]{formId},
+                    (rs, rowNum) -> {
+                        Late late = new Late();
+                        late.setId(rs.getLong("id"));
+                        late.setStudentDataId(rs.getLong("studentDataId"));
+                        late.setSemester(rs.getString("semester"));
+                        late.setPayDate(rs.getString("payDate"));
+                        late.setYear(rs.getString("year"));
+                        late.setReason(rs.getString("reason"));
+                        late.setFormStatus(rs.getString("formStatus"));
+                        late.setCreated_at(rs.getString("created_at"));
+                        return late;
+                    }
+            );
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Quit searchQuitForm(String formId){
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM QuitForm WHERE id = ?",
+                    new Object[]{formId},
+                    (rs, rowNum) -> {
+                        Quit quit = new Quit();
+                        quit.setId(rs.getLong("id"));
+                        quit.setStudentDataId(rs.getLong("studentDataId"));
+                        quit.setSemester(rs.getString("semester"));
+                        quit.setYear(rs.getString("year"));
+                        quit.setQuitReason(rs.getString("quitReason"));
+                        quit.setTuFaculty(rs.getString("tuFaculty"));
+                        quit.setTuDepartment(rs.getString("tuDepartment"));
+                        quit.setUniversity(rs.getString("university"));
+                        quit.setFaculty(rs.getString("faculty"));
+                        quit.setDepartment(rs.getString("department"));
+                        quit.setOutstandingDebt(rs.getString("outstandingDebt"));
+                        if(rs.getBoolean("reqGrade")){
+                            quit.setReqGrade("yes");
+                        } else {
+                            quit.setReqGrade("no");
+                        }
+                        quit.setFormStatus(rs.getString("formStatus"));
+                        quit.setCreated_at(rs.getString("created_at"));
+                        return quit;
+                    }
+            );
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Other searchOtherForm(String formId){
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM OtherForm WHERE id = ?",
+                    new Object[]{formId},
+                    (rs, rowNum) -> {
+                        Other other = new Other();
+                        other.setId(rs.getLong("id"));
+                        other.setStudentDataId(rs.getLong("studentDataId"));
+                        other.setInfo(rs.getString("info"));
+                        other.setFormStatus(rs.getString("formStatus"));
+                        other.setCreated_at(rs.getString("created_at"));
+                        return other;
+                    }
+            );
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public AddDrop searchAddDropForm(String formId){
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM AddDropSubjectList WHERE id = ?",
+                    new Object[]{formId},
+                    (rs, rowNum) -> {
+                        AddDrop addDrop = new AddDrop();
+                        addDrop.setId(rs.getLong("id"));
+                        addDrop.setStudentDataId(rs.getLong("studentDataId"));
+                        addDrop.setSelection(rs.getString("selection"));
+                        addDrop.setSubjectCode(rs.getString("subjectCode"));
+                        addDrop.setSubjectName(rs.getString("subjectName"));
+                        addDrop.setSubjectSection(rs.getString("subjectSection"));
+                        addDrop.setSubjectDate(rs.getString("subjectDate"));
+                        addDrop.setSubjectCredit(rs.getInt("subjectCredit"));
+                        addDrop.setSubjectTeacher(rs.getString("subjectTeacher"));
+                        if (rs.getBoolean("subjectTeacherCheck")){
+                            addDrop.setSubjectTeacherCheck("true");
+                        } else {
+                            addDrop.setSubjectTeacherCheck("false");
+                        }
+                        addDrop.setFormStatus(rs.getString("formStatus"));
+                        addDrop.setCreated_at(rs.getString("created_at"));
+                        return addDrop;
+                    }
+            );
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void updateLateForm(String formId, Late late) {
+        String sql = "UPDATE LateForm SET semester = ?, year = ?, payDate = ?, reason = ? WHERE id = ?";
+        jdbcTemplate.update(
+                sql,
+                late.getSemester(),
+                late.getYear(),
+                late.getPayDate(),
+                late.getReason(),
+                formId
+        );
+    }
+
+    @Override
+    public void updateQuitForm(String formId, Quit quit) {
+        boolean reqGrade;
+        reqGrade = quit.getReqGrade().equals("yes");
+        if (quit.getQuitReason().equals("tu")){
+            String sql = "UPDATE QuitForm SET semester = ?, year = ?, quitReason = ?, tuFaculty = ?, tuDepartment = ?, university = NULL, faculty = NULL, department = NULL, outstandingDebt = ?, reqGrade = ? WHERE id = ?";
+            jdbcTemplate.update(sql, quit.getSemester(), quit.getYear(), quit.getQuitReason(), quit.getTuFaculty(), quit.getTuDepartment(), quit.getOutstandingDebt(), reqGrade, formId);
+        } else {
+            String sql = "UPDATE QuitForm SET semester = ?, year = ?, quitReason = ?, tuFaculty = NULL, tuDepartment = NULL, university = ?, faculty = ?, department = ?, outstandingDebt = ?, reqGrade = ? WHERE id = ?";
+            jdbcTemplate.update(sql, quit.getSemester(), quit.getYear(), quit.getQuitReason(), quit.getUniversity(), quit.getFaculty(), quit.getDepartment(), quit.getOutstandingDebt(), reqGrade, formId);
+        }
+    }
+
+    @Override
+    public void updateOtherForm(String formId, Other other) {
+        String sql = "UPDATE OtherForm SET info = ? WHERE id = ?";
+        jdbcTemplate.update(
+                sql,
+                other.getInfo(),
+                formId
+        );
+    }
+
+    @Override
+    public void updateAddDropForm(String formId, AddDrop addDrop) {
+        boolean teacherCheck;
+        teacherCheck = addDrop.getSubjectTeacherCheck().equals("true");
+        String sql = "UPDATE AddDropSubjectList SET selection = ?, subjectCode = ?, subjectName = ?, subjectSection = ?, subjectDate = ?, subjectCredit = ?, subjectTeacher = ?, subjectTeacherCheck = ? WHERE id = ?";
+        jdbcTemplate.update(
+                sql,
+                addDrop.getSelection(),
+                addDrop.getSubjectCode(),
+                addDrop.getSubjectName(),
+                addDrop.getSubjectSection(),
+                addDrop.getSubjectDate(),
+                addDrop.getSubjectCredit(),
+                addDrop.getSubjectTeacher(),
+                teacherCheck,
+                formId
+        );
+    }
+
 }
