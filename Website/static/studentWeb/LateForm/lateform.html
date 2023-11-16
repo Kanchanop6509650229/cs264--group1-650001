@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Late Form</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <h2 class="logo"><img src="img/logo.png" width="450"></h2>
+        <nav class="navigation">
+            <a href="../studentHomepage.html" class="not-active">หน้าหลัก</a>
+            <div class="dropdown">
+                <a href="#" class="active">ขอยื่นคำร้อง ▼</a>
+                <div class="dropdown-content">
+                    <a href="../QuitForm/QuitForm.html" class="not-active" id="QuitForm">ขอลาออก</a>
+                    <a href="#top" class="active">ขอผ่อนผันค่าจดทะเบียนเรียน</a>
+                    <a href="../Add_Drop_item/add_drop.html" class="not-active" id="addDropLink">ขอเพิ่ม/ถอนรายวิชา (drop w)</a>
+                    <a href="../OtherForm/otherform.html" class="not-active" id="otherFormLink">อื่นๆ</a>
+                </div>
+            </div>
+            <a href="../Status/status.html" class="not-active" id="statusLink">ติดตามผลคำร้อง</a>
+            <a href="#" class="not-active">รายการชำระเงิน</a>
+        </nav>
+    </header>
+    <div class="wrapper" style="height: auto;">
+        <div class="info-box" style="background-color: rgba(212, 204, 196, 0.75); border-radius: 34px; padding-top: 15px; text-align: center; margin-bottom: 60px; margin-top: 30px;">
+            <h3>เเบบฟอร์มขอผ่อนผันค่าจดทะเบียนเรียน</h3>
+            <form style="margin: 0;" id="lateForm" name="lateForm" onsubmit="submitForm(event)">
+                <h4><label>ขอผ่อนผันค่าจดทะเบียนเรียน ในภาคเรียนที่</label><select name="semester" id="semester" required style="flex: 0.4;">
+                                                    <option value="" selected disabled hidden>-</option>
+                                                    <option value="1">ภาคเรียนที่ 1</option>
+                                                    <option value="2">ภาคเรียนที่ 2</option>
+                                                    <option value="Summer">ภาคเรียน summer</option>
+                </select>
+                    <label>ในปีการศึกษาที่(ค.ศ.)</label><input type="tel" name="year" id="year" required pattern="[0-9]{4}" style="margin-right: 0; flex: 0.2;">
+                </h4>
+                <h4><label>คาดว่าจะสามารถชำระเงินได้ภายในเดือน</label>
+                    <input type="month" name="payDate" id="payDate" style="margin-right: 0; flex: 0.5;" required>
+                </h4>
+                <h4 style="align-items: normal; margin-top: 25px;"><label>เหตุผลของการขอผ่อนผันค่าจดทะเบียนเรียน</label>
+                    <textarea type="text" name="reason" id="reason" style="margin-right: 0; height: 200px; align-items: normal; margin-top: 0; text-align: left; justify-content: flex-start;" required></textarea>
+                </h4>
+                <h4>
+                    <label>(ทั้งนี้ต้องไม่มีหนี้สินค้างชำระค่าจดทะเบียนเรียนในค่าเทอมก่อนหน้า)</label>
+                </h4>
+                <h4>
+                    <label>แนบไฟล์เอกสาร</label>
+                    <input type="file" name="fileInput" id="fileInput" accept=".pdf, .jpg" multiple style="margin-right: 0;">
+                </h4>
+                <h4 style="margin-top: 50px;">
+                    <button type="submit" class="btn" style="flex: 1;">บันทึก</button>
+                </h4>
+                </form>
+        </div>
+    </div>
+    <a id="logout-button" onclick="logout()">
+        <ion-icon name="enter-outline" style="width: 60px; height: 60px;"></ion-icon>
+    </a>
+<script src="script.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+</html>

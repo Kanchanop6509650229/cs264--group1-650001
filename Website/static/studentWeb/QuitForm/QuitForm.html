@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>Quit Form</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -18,20 +18,20 @@
         <nav class="navigation">
             <a href="../studentHomepage.html" class="not-active">หน้าหลัก</a>
             <div class="dropdown">
-                <a href="#" class="not-active">ขอยื่นคำร้อง ▼</a>
+                <a href="#" class="active">ขอยื่นคำร้อง ▼</a>
                 <div class="dropdown-content">
                     <a href="#top" class="active">ขอลาออก</a>
-                    <a href="#" class="not-active">ขอผ่อนผันค่าจดทะเบียนเรียน</a>
+                    <a href="../LateForm/lateform.html" class="not-active" id="lateFormLink">ขอผ่อนผันค่าจดทะเบียนเรียน</a>
                     <a href="../Add_Drop_item/add_drop.html" class="not-active" id="addDropLink">ขอเพิ่ม/ถอนรายวิชา (drop w)</a>
-                    <a href="#" class="not-active">อื่นๆ</a>
+                    <a href="../OtherForm/otherform.html" class="not-active" id="otherFormLink">อื่นๆ</a>
                 </div>
             </div>
-            <a href="#" class="not-active">ติดตามผลคำร้อง</a>
+            <a href="../Status/status.html" class="not-active" id="statusLink">ติดตามผลคำร้อง</a>
             <a href="#" class="not-active">รายการชำระเงิน</a>
         </nav>
     </header>
     <div class="wrapper" style="height: auto;">
-        <div class="info-box" style="background-color: rgba(212, 204, 196, 0.75); border-radius: 34px; padding-top: 15px; text-align: center; margin-bottom: 60px;">
+        <div class="info-box" style="background-color: rgba(212, 204, 196, 0.75); border-radius: 34px; padding-top: 15px; text-align: center; margin-bottom: 60px; margin-top: 30px;">
             <h3>แบบฟอร์มขอลาออก</h3>
             <form style="margin: 0;" id="quitForm" name="quitForm" onsubmit="submitForm(event)">
                 <h4><label>ขอลาออกในภาคเรียนที่</label><select name="semester" id="semester" required>
@@ -40,9 +40,9 @@
                                                     <option value="2">ภาคเรียนที่ 2</option>
                                                     <option value="Summer">ภาคเรียน summer</option>
                 </select>
-                    <label>ปีการศึกษา(พ.ศ.)</label><input type="tel" name="year" id="year" required pattern="[0-9]{4}">
+                    <label>ปีการศึกษา(ค.ศ.)</label><input type="tel" name="year" id="year" required pattern="[0-9]{4}">
                     <label>เหตุผล เพราะ</label>
-                    <select name="quitReason" id="quitReason" required>
+                    <select name="quitReason" id="quitReason" required style="margin-right: 0;">
                         <option value="" selected disabled hidden>-</option>
                         <option value="tu">ศึกษาต่อที่ ม.ธรรมศาสตร์</option>
                         <option value="other">ศึกษาต่อที่ มหาวิทยาลัยอื่น</option>
@@ -50,10 +50,10 @@
                 </h4>
                 <h4>
                     <label id="tuFacultyLabel">คณะ</label><input type="text" required id="tuFaculty" name="tuFaculty">
-                    <label id="tuDepartmentLabel">สาขา</label><input type="text" required id="tuDepartment" name="tuDepartment">
+                    <label id="tuDepartmentLabel">สาขา</label><input type="text" required id="tuDepartment" name="tuDepartment" style="margin-right: 0;">
                     <label id="universityLabel">คือ มหาวิทยาลัย</label><input type="text" required id="university" name="university">
                     <label id="facultyLabel">คณะ</label><input type="text" required id="faculty" name="faculty">
-                    <label id="departmentLabel">สาขา</label><input type="text" required id="department" name="department">
+                    <label id="departmentLabel">สาขา</label><input type="text" required id="department" name="department" style="margin-right: 0;">
                 </h4>
                 <h4><label><u>กรณีลาออก</u></label></h4>
                 <h4><label>1. มีหนี้ค้างกับ มธ./หน่วยงานภายในมธ.หรือไม่ ถ้ามีโปรดระบุ</label>
@@ -67,8 +67,12 @@
                         <option value="no">ไม่ต้องการ</option>
                         </select>
                 </h4>
+                <h4>
+                    <label>แนบไฟล์เอกสาร</label>
+                    <input type="file" name="fileInput" id="fileInput" accept=".pdf, .jpg" multiple style="margin-right: 0;">
+                </h4>
                 <h4 style="margin-top: 50px;">
-                    <button type="submit" class="btn" style="margin-left: 10px; flex: 1;">บันทึก</button>
+                    <button type="submit" class="btn" style="flex: 1;">บันทึก</button>
                 </h4>
                 </form>
         </div>
