@@ -37,7 +37,7 @@ public class FormController {
     @PostMapping("/quitForm")
     public ResponseEntity<String> submitQuitForm(@RequestBody Quit quit) {
         try {
-            
+
             formRepository.saveQuitForm(quit);
 
             return ResponseEntity.ok("Form submitted successfully");
@@ -48,7 +48,7 @@ public class FormController {
     }
 
     @PostMapping("/lateForm")
-    public ResponseEntity<String> submitQuitForm(@RequestBody Late late) {
+    public ResponseEntity<String> submitLateForm(@RequestBody Late late) {
         try {
 
             formRepository.saveLateForm(late);
@@ -79,7 +79,7 @@ public class FormController {
             AllData allData = formRepository.searchForm(studentId);
             if (allData != null) {
                 List<Tracking> trackingList = new ArrayList<Tracking>();
-                for(AddDrop addDrop : allData.getAddDropList()) {
+                for (AddDrop addDrop : allData.getAddDropList()) {
                     Tracking tracking = new Tracking();
                     tracking.setFormId(addDrop.getId());
                     if (addDrop.getSelection().equals("Add")) {
@@ -136,4 +136,203 @@ public class FormController {
         }
     }
 
+    @GetMapping("/getLateFormByFormId")
+    public ResponseEntity<Late> getLateData(@RequestParam String formId) {
+        try {
+            Late lateForm = formRepository.searchLateForm(formId);
+            if (lateForm != null) {
+                return new ResponseEntity<>(lateForm, HttpStatus.OK);
+            } else {
+                // Handle the case when no student data is found
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getQuitFormByFormId")
+    public ResponseEntity<Quit> getQuitData(@RequestParam String formId) {
+        try {
+            Quit quitForm = formRepository.searchQuitForm(formId);
+            if (quitForm != null) {
+                return new ResponseEntity<>(quitForm, HttpStatus.OK);
+            } else {
+                // Handle the case when no student data is found
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getOtherFormByFormId")
+    public ResponseEntity<Other> getOtherData(@RequestParam String formId) {
+        try {
+            Other otherForm = formRepository.searchOtherForm(formId);
+            if (otherForm != null) {
+                return new ResponseEntity<>(otherForm, HttpStatus.OK);
+            } else {
+                // Handle the case when no student data is found
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getAddDropFormByFormId")
+    public ResponseEntity<AddDrop> getAddDropData(@RequestParam String formId) {
+        try {
+            AddDrop addDropForm = formRepository.searchAddDropForm(formId);
+            if (addDropForm != null) {
+                return new ResponseEntity<>(addDropForm, HttpStatus.OK);
+            } else {
+                // Handle the case when no student data is found
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/updateLateForm")
+    public ResponseEntity<String> updateLateForm(@RequestBody Late late, @RequestParam String formId) {
+        try {
+
+            formRepository.updateLateForm(formId, late);
+
+            return ResponseEntity.ok("Form submitted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error submitting form");
+        }
+    }
+
+    @PostMapping("/updateQuitForm")
+    public ResponseEntity<String> updateQuitForm(@RequestBody Quit quit, @RequestParam String formId) {
+        try {
+
+            formRepository.updateQuitForm(formId, quit);
+
+            return ResponseEntity.ok("Form submitted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error submitting form");
+        }
+    }
+
+    @PostMapping("/updateOtherForm")
+    public ResponseEntity<String> updateOtherForm(@RequestBody Other other, @RequestParam String formId) {
+        try {
+
+            formRepository.updateOtherForm(formId, other);
+
+            return ResponseEntity.ok("Form submitted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error submitting form");
+        }
+    }
+
+    @PostMapping("/updateAddDropForm")
+    public ResponseEntity<String> updateAddDropForm(@RequestBody AddDrop addDrop, @RequestParam String formId) {
+        try {
+
+            formRepository.updateAddDropForm(formId, addDrop);
+
+            return ResponseEntity.ok("Form submitted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error submitting form");
+        }
+    }
+
+    @GetMapping("/getTrackingLateForm")
+    public ResponseEntity<Tracking> getTrackingLate(@RequestParam String formId) {
+        try {
+            Late lateForm = formRepository.searchLateForm(formId);
+            if (lateForm != null) {
+                Tracking tracking = new Tracking();
+                tracking.setFormId(lateForm.getId());
+                tracking.setFormName("ขอผ่อนผัน");
+                tracking.setStudentDataId(lateForm.getStudentDataId());
+                tracking.setStatus(lateForm.getFormStatus());
+                tracking.setDateTime(lateForm.getCreated_at() + " น.");
+                return new ResponseEntity<>(tracking, HttpStatus.OK);
+            } else {
+                // Handle the case when no student data is found
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getTrackingQuitForm")
+    public ResponseEntity<Tracking> getTrackingQuit(@RequestParam String formId) {
+        try {
+        Quit quitForm = formRepository.searchQuitForm(formId);
+            if (quitForm != null) {
+                Tracking tracking = new Tracking();
+                tracking.setFormId(quitForm.getId());
+                tracking.setFormName("ขอลาออก");
+                tracking.setStudentDataId(quitForm.getStudentDataId());
+                tracking.setStatus(quitForm.getFormStatus());
+                tracking.setDateTime(quitForm.getCreated_at() + " น.");
+                return new ResponseEntity<>(tracking, HttpStatus.OK);
+            } else {
+                // Handle the case when no student data is found
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getTrackingOtherForm")
+    public ResponseEntity<Tracking> getTrackingOther(@RequestParam String formId) {
+        try {
+            Other otherForm = formRepository.searchOtherForm(formId);
+            if (otherForm != null) {
+                Tracking tracking = new Tracking();
+                tracking.setFormId(otherForm.getId());
+                tracking.setFormName("อื่นๆ");
+                tracking.setStudentDataId(otherForm.getStudentDataId());
+                tracking.setStatus(otherForm.getFormStatus());
+                tracking.setDateTime(otherForm.getCreated_at() + " น.");
+                return new ResponseEntity<>(tracking, HttpStatus.OK);
+            } else {
+                // Handle the case when no student data is found
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getTrackingAddDropForm")
+    public ResponseEntity<Tracking> getTrackingAddDrop(@RequestParam String formId) {
+        try {
+            AddDrop addDropForm = formRepository.searchAddDropForm(formId);
+            if (addDropForm != null) {
+                Tracking tracking = new Tracking();
+                tracking.setFormId(addDropForm.getId());
+                if (addDropForm.getSelection().equals("Add")){
+                    tracking.setFormName("เพิ่มรายวิชา");
+                } else {
+                    tracking.setFormName("ถอนรายวิชา");
+                }
+                tracking.setStudentDataId(addDropForm.getStudentDataId());
+                tracking.setStatus(addDropForm.getFormStatus());
+                tracking.setDateTime(addDropForm.getCreated_at() + " น.");
+                return new ResponseEntity<>(tracking, HttpStatus.OK);
+            } else {
+                // Handle the case when no student data is found
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
