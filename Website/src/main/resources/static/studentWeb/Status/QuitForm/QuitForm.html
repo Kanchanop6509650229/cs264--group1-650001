@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quit Form Status</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <h2 class="logo"><img src="img/logo.png" width="450"></h2>
+        <nav class="navigation">
+            <a href="../../studentHomepage.html" class="not-active">หน้าหลัก</a>
+            <div class="dropdown">
+                <a href="#" class="not-active">ขอยื่นคำร้อง ▼</a>
+                <div class="dropdown-content">
+                    <a href="../../QuitForm/QuitForm.html" class="not-active" id="QuitLink">ขอลาออก</a>
+                    <a href="../../LateForm/lateform.html" class="not-active" id="LateFormLink">ขอผ่อนผันค่าจดทะเบียนเรียน</a>
+                    <a href="../../Add_Drop_item/add_drop.html" class="not-active" id="addDropLink">ขอเพิ่ม/ถอนรายวิชา (drop w)</a>
+                    <a href="../../OtherForm/otherform.html" class="not-active" id="otherFormLink">อื่นๆ</a>
+                </div>
+            </div>
+            <a href="../status.html" class="active" id="statusLink">ติดตามผลคำร้อง</a>
+            <a href="#" class="not-active">รายการชำระเงิน</a>
+        </nav>
+    </header>
+    <div class="wrapper" style="height: auto;">
+        <div class="info-box" style="background-color: transparent; border-radius: 34px; padding-top: 15px; text-align: left; margin-bottom: 60px; margin-top: 30px;">
+            <table class="table" id="requestTable">
+                <thead>
+                <tr>
+                    <th>ลำดับ</th>
+                    <th>วันที่และเวลาส่ง</th>
+                    <th>สถานะคำร้อง</th>
+                    <th>คำร้อง</th>
+                    <th>ชื่อ-นามสกุล</th>
+                    <th>รายละเอียด</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="info-box" style="background-color: rgba(212, 204, 196, 0.75); border-radius: 34px; padding-top: 15px; text-align: center; margin-bottom: 60px; margin-top: 0px;">
+            <h3>แบบฟอร์มขอลาออก</h3>
+            <form style="margin: 0;" id="quitForm" name="quitForm" onsubmit="submitForm(event)">
+                <h4><label>ขอลาออกในภาคเรียนที่</label><select name="semester" id="semester" required>
+                                                    <option value="" selected disabled hidden>-</option>
+                                                    <option value="1">ภาคเรียนที่ 1</option>
+                                                    <option value="2">ภาคเรียนที่ 2</option>
+                                                    <option value="Summer">ภาคเรียน summer</option>
+                </select>
+                    <label>ปีการศึกษา(ค.ศ.)</label><input type="tel" name="year" id="year" required pattern="[0-9]{4}">
+                    <label>เหตุผล เพราะ</label>
+                    <select name="quitReason" id="quitReason" required style="margin-right: 0;">
+                        <option value="" selected disabled hidden>-</option>
+                        <option value="tu">ศึกษาต่อที่ ม.ธรรมศาสตร์</option>
+                        <option value="other">ศึกษาต่อที่ มหาวิทยาลัยอื่น</option>
+                    </select>
+                </h4>
+                <h4>
+                    <label id="tuFacultyLabel">คณะ</label><input type="text" required id="tuFaculty" name="tuFaculty">
+                    <label id="tuDepartmentLabel">สาขา</label><input type="text" required id="tuDepartment" name="tuDepartment" style="margin-right: 0;">
+                    <label id="universityLabel">คือ มหาวิทยาลัย</label><input type="text" required id="university" name="university">
+                    <label id="facultyLabel">คณะ</label><input type="text" required id="faculty" name="faculty">
+                    <label id="departmentLabel">สาขา</label><input type="text" required id="department" name="department" style="margin-right: 0;">
+                </h4>
+                <h4><label><u>กรณีลาออก</u></label></h4>
+                <h4><label>1. มีหนี้ค้างกับ มธ./หน่วยงานภายในมธ.หรือไม่ ถ้ามีโปรดระบุ</label>
+                    <input type="text" name="outstandingDebt" id="outstandingDebt" style="margin-right: 0;">
+                </h4>
+                <h4>
+                    <label>2. ต้องการเกรดในภาคเรียนที่ยื่นคำร้องหรือไม่</label>
+                    <select name="reqGrade" id="reqGrade" required>
+                        <option value="" selected disabled hidden>-</option>
+                        <option value="yes">ต้องการ</option>
+                        <option value="no">ไม่ต้องการ</option>
+                        </select>
+                </h4>
+                <h4 style="margin-top: 50px;">
+                    <button type="button" class="btn" id="edit-btn" style="margin-right: 10px;  background-color: rgb(194, 194, 15); color: black;" onclick="toggleEditing()">แก้ไข</button><button type="submit" class="btn" style="margin-left: 10px;">บันทึก</button>
+                </h4>
+                </form>
+        </div>
+    </div>
+    <a id="logout-button" onclick="logout()">
+        <ion-icon name="enter-outline" style="width: 60px; height: 60px;"></ion-icon>
+    </a>
+    <a id="back-button" onclick="previous()">
+        </ion-icon><ion-icon name="arrow-back-outline" style="width: 60px; height: 60px;"></ion-icon>
+    </a>
+<script src="script.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+</html>
