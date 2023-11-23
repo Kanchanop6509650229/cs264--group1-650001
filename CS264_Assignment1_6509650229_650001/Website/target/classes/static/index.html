@@ -1,0 +1,297 @@
+<!-- กาญจนพ บัวรอด -->
+<!-- 6509650229 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Request Form</title>
+    <link rel="stylesheet" href="style.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="body">
+    <div class="header">
+        <h1>คำร้องขอเพิ่ม-ถอนวิชา</h1>
+        <h2>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยธรรมศาสตร์ ศูนย์รังสิต</h2>
+    </div>
+    <div>
+        <form action="/api/submitForm" id="form1" method="POST" enctype="application/json" onsubmit="collectTableData()">
+            <div class="day">
+                <p class="inline-p">วันที่ยื่นคำร้องขอ</p>
+                <input type="date" name="date" required style="font-size: 16px; text-align: center;">
+            </div>
+            <br>
+            <div class="info">
+                <table class="info-table">
+                    <tbody>
+                    <tr>
+                        <td style="flex: 2; margin-left: 0;">
+                            <label>ข้าพเจ้า</label>
+                            <select name="nameTitle" required style="margin-left: 7px; flex: 0.3;">
+                                <option value="" selected disabled hidden>-</option>
+                                <option value="นาย">นาย</option>
+                                <option value="นาง">นาง</option>
+                                <option value="นางสาว">นางสาว</option>
+                            </select>
+                            <input type="text" name="name" placeholder="ชื่อ-นามสกุล" required style="margin-left: 0;">
+                        </td>
+                        <td style="flex: 1;">
+                            <label>เลขทะเบียน</label>
+                            <input type="tel" name="studentId" id="student_id" placeholder="เลขทะเบียน 10 หลัก" required pattern="[0-9]{10}" style="font-size: 16px;">
+                        </td>
+                        <td style="flex: 0.55;">
+                            <label>ชั้นปีที่</label>
+                            <input type="number" name="studentYear" min="1" max="8" placeholder="ชั้นปีที่ศึกษา" required>
+                        </td>
+                        <td style="flex: 2;">
+                            <label>สาขาวิชา</label>
+                            <input type="text" name="studyField" placeholder="สาขาวิชา(คณะวิทยาศาสตร์และเทคโนโลยี)" required>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="info-table">
+                    <tbody>
+                    <tr>
+                        <td style="flex: 0.5; margin-left: 0;">
+                            <label style="margin-left: 0;">ที่อยู่ที่สามารถติดต่อได้ทางไปรษณีย์ บ้านเลขที่</label>
+                            <input type="text" name="addressNumber" placeholder="บ้านเลขที่" required>
+                        </td>
+                        <td style="flex: 0.5;">
+                            <label>หมู่ที่</label>
+                            <input type="number" name="moo" placeholder="หมู่" style="width: 50px;" required>
+                        </td>
+                        <td>
+                            <label>ตำบล</label>
+                            <input type="text" name="tumbol" placeholder="ตำบล" required>
+                        </td>
+                        <td>
+                            <label>อำเภอ</label>
+                            <input type="text" name="amphur" placeholder="อำเภอ" required>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="info-table">
+                    <tbody>
+                    <tr>
+                        <td style="margin-left: 0;">
+                            <label style="margin-left: 0;">จังหวัด</label>
+                            <input type="text" name="province" placeholder="จังหวัด" required>
+                        </td>
+                        <td style="flex: 0.1;">
+                            <label>รหัสไปรษณีย์</label>
+                            <input type="number" name="postalCode" id="post" placeholder="ไปรษณีย์" required>
+                        </td>
+                        <td>
+                            <label>โทรศัพท์มือถือ</label>
+                            <input type="tel" name="mobilePhone" placeholder="เบอร์โทรศัพท์มือถือ" pattern="[0-9]{10}" required style="font-size: 16px;">
+                        </td>
+                        <td>
+                            <label>โทรศัพท์บ้าน</label>
+                            <input type="tel" name="phone" id="home-tel" placeholder="เบอร์โทรศัพท์บ้าน(ถ้ามี)" pattern="[0-9]{10}}" style="font-size: 16px;">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="info-table">
+                    <tbody>
+                    <tr>
+                        <td style="flex: 1.5; margin-left: 0;">
+                            <label>อาจารย์ที่ปรึกษา</label>
+                            <input type="text" name="advisor" id="teacher" placeholder="ชื่ออาจารย์ที่ปรึกษา" required>
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3>มีความประสงค์จะขอเพิ่ม/ถอนดังรายการต่อไปนี้</h3>
+            <table class="table" id="requestTable">
+                <thead>
+                <tr>
+                    <th style="width: 5%;"></th>
+                    <th style="width: 5%;">รหัสวิชา</th>
+                    <th style="width: 15%;">ชื่อวิชา</th>
+                    <th style="width: 6%;">Section</th>
+                    <th style="width: 8%;">วัน/เวลา</th>
+                    <th style="width: 2%;">หน่วยกิต</th>
+                    <th style="width: 17%;">ชื่อผู้สอน</th>
+                    <th style="width: 7%;">ผู้สอนอนุญาติ</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <select name="selection" style="width: 100%;" required >
+                            <option value="" selected disabled hidden>-</option>
+                            <option value="add">เพิ่ม</option>
+                            <option value="remove">ถอน</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="subjectCode" maxlength="6" required>
+                    </td>
+                    <td>
+                        <input type="text" name="subjectName" required>
+                    </td>
+                    <td>
+                        <input type="tel" name="subjectSection" pattern="[0-9]{6}" maxlength="6" required>
+                    </td>
+                    <td>
+                        <input type="datetime-local" name="subjectDate" required>
+                    </td>
+                    <td>
+                        <input type="number" name="subjectCredit" maxlength="1" min="0" max="3" required>
+                    </td>
+                    <td>
+                        <input type="text" name="subjectTeacher" required>
+                    </td>
+                    <td>
+                        <select name="subjectTeacherCheck" required>
+                            <option value="" selected disabled hidden>-</option>
+                            <option value="true">อนุญาติ</option>
+                            <option value="false">ไม่อนุญาติ</option>
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+            <!-- Add a "Add Row" button -->
+            <button type="button" id="addButton" onclick="addRow()">Add Action</button>
+
+            <!-- Add a "Remove Row" button -->
+            <button type="button" id="removeButton" onclick="removeRow()">Remove Action</button>
+
+            <div class="info">
+                <h3 style="margin-bottom: 0; margin-top: 0; ">เหตุผลการเพิ่มถอน</h3>
+                <table class="info-table">
+                    <tbody>
+                    <tr>
+                        <td style="margin-left: 0;">
+                            <input type="text" name="cause" required style="margin-left: 0; text-align: start;">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <input type="submit" value="Submit" style="margin-top: 20px;">
+        </form>
+    </div>
+</div>
+<form action="/api/findByStudentId" id="form2" method="GET" onsubmit="collectTableData();">
+    <h3 style="margin-bottom: 5px; margin-top: 30px;">ค้นหาข้อมูลนักศึกษาเลขทะเบียน</h3>
+    <input type="tel" name="searchId" style="width: 15%; text-align: center;" placeholder="เลขทะเบียน 10 หลักที่ต้องการค้นหา" pattern="[0-9]{10}">
+    <input type="submit" value="Submit" style="display: inline; width: auto;">
+</form>
+<table class="info-table">
+    <tbody>
+        <tr>
+            <td>
+                <form action="/api/findAll" id="form3" method="GET">
+                    <h3 style="margin-bottom: 5px; margin-top: 30px;">ดูข้อมูลใน database ทั้งหมด</h3>
+                    <input type="submit" value="FindAll in database" style="display: inline; width: auto;">
+                </form>
+            </td>
+            <td>
+                <form action="/api/deleteAll" id="form4" method="GET">
+                    <h3 style="margin-bottom: 5px; margin-top: 30px;">ลบข้อมูลใน database ทั้งหมด</h3>
+                    <input type="submit" value="DeleteAll in database" style="display: inline; width: auto;">
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<script>
+    // Function to add a new row
+    function addRow() {
+        const table = document.getElementById("requestTable");
+        const firstRow = table.querySelector("tbody tr:first-child");
+        if (firstRow) {
+            const newRow = firstRow.cloneNode(true);
+            const newInputs = newRow.querySelectorAll("input");
+            newInputs.forEach((input) => (input.value = "")); // Clear input values in the new row
+
+            // Set default value for select elements in the new row
+            const newSelects = newRow.querySelectorAll("select");
+            newSelects.forEach((select) => {
+                select.value = select.querySelector("option").value;
+            });
+
+            table.querySelector("tbody").appendChild(newRow);
+        }
+    }
+
+    // Function to remove the last row (keeping at least one row)
+    function removeRow() {
+        const table = document.getElementById("requestTable");
+        const rows = table.querySelectorAll("tbody tr");
+        if (rows.length > 1) {
+            table.querySelector("tbody").removeChild(rows[rows.length - 1]);
+        } else {
+                alert("You must have at least one row.");
+        }
+    }
+
+    function collectTableData() {
+    const table = document.getElementById("requestTable");
+    const rows = table.querySelectorAll("tbody tr");
+    const tableData = [];
+
+    rows.forEach((row) => {
+        const rowData = {
+            selection: row.querySelector("select[name='selection']").value,
+            subjectCode: row.querySelector("input[name='subjectCode']").value,
+            subjectName: row.querySelector("input[name='subjectName']").value,
+            subjectSection: row.querySelector("input[name='subjectSection']").value,
+            subjectDate: row.querySelector("input[name='subjectDate']").value,
+            subjectCredit: row.querySelector("input[name='subjectCredit']").value,
+            subjectTeacher: row.querySelector("input[name='subjectTeacher']").value,
+            subjectTeacherCheck: row.querySelector("select[name='subjectTeacherCheck']").value,
+        };
+
+        tableData.push(rowData);
+    });
+
+    // Set the table data in the hidden input field as JSON
+    const tableDataInput = document.getElementById("tableData");
+    tableDataInput.value = JSON.stringify(tableData);
+    }
+
+    // ตรวจสอบการส่งข้อมูลเป็น JSON
+    const formData = { /* ข้อมูลของคุณ */ };
+    const jsonData = JSON.stringify(formData);
+
+    fetch('/api/submitForm', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: jsonData
+    });
+
+    function disableOtherForm(formId) {
+            if (formId === 'form1') {
+                document.getElementById('form2').submitButton.disabled = true;
+                document.getElementById('form3').submitButton.disabled = true;
+                document.getElementById('form4').submitButton.disabled = true;
+            } else if(formId === 'form2') {
+                document.getElementById('form1').submitButton.disabled = true;
+                document.getElementById('form3').submitButton.disabled = true;
+                document.getElementById('form4').submitButton.disabled = true;
+            } else if(formID == 'form3') {
+            document.getElementById('form1').submitButton.disabled = true;
+            document.getElementById('form2').submitButton.disabled = true;
+            document.getElementById('form4').submitButton.disabled = true;
+            } else if(formID == 'form4') {
+            document.getElementById('form1').submitButton.disabled = true;
+            document.getElementById('form2').submitButton.disabled = true;
+            document.getElementById('form3').submitButton.disabled = true;
+            }
+    }
+
+</script>
+</body>
+</html>
